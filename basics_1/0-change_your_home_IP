@@ -1,13 +1,16 @@
 #!/usr/bin/env bash
+# Configures /etc/hosts to make localhost resolve to 127.0.0.2 and facebook.com to 8.8.8.8
 
-# Check if script is run as root
-[ "$EUID" -ne 0 ] && echo "Please run as root" && exit 1
+if [ "$EUID" -ne 0 ]; then
+    echo "Please run as root"
+    exit 1
+fi
 
 # Backup current hosts file
 cp /etc/hosts /etc/hosts.bak
 
-# Remove existing localhost and facebook.com entries
-grep -v 'localhost' /etc/hosts | grep -v 'facebook.com' > /tmp/hosts.new
+# Remove existing entries for localhost and facebook.com
+grep -v -E 'localhost|facebook\.com' /etc/hosts > /tmp/hosts.new
 
 # Add the required mappings
 echo "127.0.0.2 localhost" >> /tmp/hosts.new
